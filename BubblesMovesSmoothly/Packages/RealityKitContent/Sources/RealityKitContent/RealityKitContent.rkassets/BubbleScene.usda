@@ -50,6 +50,31 @@ def Xform "Root"
         {
             uniform token info:id = "RealityKitContent.BubbleComponent"
         }
+
+        def RealityKitComponent "RigidBody"
+        {
+            bool gravityEnabled = 0
+            uniform token info:id = "RealityKit.RigidBody"
+            float linearDamping = 0
+
+            def RealityKitStruct "massFrame"
+            {
+                def RealityKitStruct "m_pose"
+                {
+                }
+            }
+
+            def RealityKitStruct "material"
+            {
+            }
+        }
+
+        def RealityKitComponent "MotionState"
+        {
+            uniform token info:id = "RealityKit.MotionState"
+            float3 m_userSetLinearVelocity = (0.04, 0.04, 0.04)
+            uint m_userSetLinearVelocityVersion = 1
+        }
     }
 
     def Material "BubbleMaterial"
