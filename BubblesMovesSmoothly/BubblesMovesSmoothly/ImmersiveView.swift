@@ -6,19 +6,39 @@
 //
 
 import RealityKit
-import RealityKitContent
 import SwiftUI
+import RealityKitContent
 
 struct ImmersiveView: View {
     @Environment(AppModel.self) var appModel
     @State var predicate = QueryPredicate<Entity>.has(ModelComponent.self)
     @State private var timer: Timer?
 
+    @State private var bubble = Entity()
+
     var body: some View {
         RealityView { content in
-            // Add the initial RealityKit content
+            
             if let immersiveContentEntity = try? await Entity(named: "BubbleScene", in: realityKitContentBundle) {
-                content.add(immersiveContentEntity)
+                bubble = immersiveContentEntity.findEntity(named: "Bubble")!
+                for _ in 1...20 {
+                    let bubbleClone = bubble.clone(recursive: true)
+                    
+                    guard var bubbleComponent = bubbleClone.components[BubbleComponent.self] else { return }
+                    bubbleComponent.direction = [
+                        Float.random(in: -1...1),
+                        Float.random(in: -1...1),
+                        Float.random(in: -1...1)
+                    ]
+                    bubbleClone.components[BubbleComponent.self] = bubbleComponent
+                    
+                    let x = Float.random(in: -1.5...1.5)
+                    let y = Float.random(in: 1...1.5)
+                    let z = Float.random(in: -1.5...1.5)
+
+                    bubbleClone.position = [x, y, z]
+                    content.add(bubbleClone)
+                }
             }
         }
         .gesture(SpatialTapGesture().targetedToEntity(where: predicate).onEnded { value in
@@ -29,11 +49,11 @@ struct ImmersiveView: View {
             let targetValue: Float = 1
             let totalFrames = Int(duration / frameRate)
 
-            //let animation = Animation.linear(duration: duration).repeatForever()
+            // let animation = Animation.linear(duration: duration).repeatForever()
 
             var currentFrame = 0
             var popValue: Float = 0.0
-            
+
             timer?.invalidate()
             timer = Timer.scheduledTimer(withTimeInterval: frameRate, repeats: true, block: { timer in
                 currentFrame += 1
@@ -45,7 +65,7 @@ struct ImmersiveView: View {
                 } catch {
                     print("Error setting parameter: \(error)")
                 }
-                
+
                 if currentFrame >= totalFrames {
                     timer.invalidate()
                     entity.removeFromParent()

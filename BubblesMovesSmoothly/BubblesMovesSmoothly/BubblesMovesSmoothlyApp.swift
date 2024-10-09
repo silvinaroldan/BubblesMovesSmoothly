@@ -8,9 +8,13 @@
 import SwiftUI
 
 @main
-struct BubblesApp: App {
+struct BubblesMovesSmoothlyApp: App {
     
     @State private var appModel = AppModel()
+    
+    init() {
+        BubblesSystem.registerSystem()
+    }
     
     var body: some Scene {
         WindowGroup {
