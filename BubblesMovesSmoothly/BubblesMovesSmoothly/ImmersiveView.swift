@@ -6,8 +6,8 @@
 //
 
 import RealityKit
-import SwiftUI
 import RealityKitContent
+import SwiftUI
 
 struct ImmersiveView: View {
     @Environment(AppModel.self) var appModel
@@ -18,12 +18,13 @@ struct ImmersiveView: View {
 
     var body: some View {
         RealityView { content in
-            
+            content.add(createImmersivePicture(imageName: "romania"))
+
             if let immersiveContentEntity = try? await Entity(named: "BubbleScene", in: realityKitContentBundle) {
                 bubble = immersiveContentEntity.findEntity(named: "Bubble")!
                 for _ in 1...50 {
                     let bubbleClone = bubble.clone(recursive: true)
-                    
+
                     guard var bubbleComponent = bubbleClone.components[BubbleComponent.self] else { return }
                     bubbleComponent.direction = [
                         Float.random(in: -1...1),
@@ -31,22 +32,22 @@ struct ImmersiveView: View {
                         Float.random(in: -1...1)
                     ]
                     bubbleClone.components[BubbleComponent.self] = bubbleComponent
-                    
+
                     var physicsBody = PhysicsBodyComponent()
                     physicsBody.linearDamping = 0
                     physicsBody.isAffectedByGravity = false
-                    
+
                     bubbleClone.components[PhysicsBodyComponent.self] = physicsBody
-                    
+
                     var physicsMotions = PhysicsMotionComponent()
                     let linearVelocityX = Float.random(in: -0.05...0.05)
                     let linearVelocityY = Float.random(in: -0.05...0.05)
                     let linearVelocityZ = Float.random(in: -0.05...0.05)
-                    
+
                     physicsMotions.linearVelocity = [linearVelocityX, linearVelocityY, linearVelocityZ]
-                    
+
                     bubbleClone.components[PhysicsMotionComponent.self] = physicsMotions
-                    
+
                     let x = Float.random(in: -1.5...1.5)
                     let y = Float.random(in: 1...1.5)
                     let z = Float.random(in: -1.5...1.5)
@@ -88,6 +89,17 @@ struct ImmersiveView: View {
                 }
             })
         })
+    }
+
+    func createImmersivePicture(imageName: String) -> Entity {
+        let modelEntity = Entity()
+        let texture = try? TextureResource.load(named: imageName)
+        var material = UnlitMaterial()
+        material.color = .init(texture: .init(texture!))
+        modelEntity.components.set(ModelComponent(mesh: .generateSphere(radius: 1E3), materials: [material]))
+        modelEntity.scale = .init(x: -1, y: 1, z: 1)
+        modelEntity.transform.translation += SIMD3<Float>(0.0, 1.0, 0.0)
+        return modelEntity
     }
 }
 

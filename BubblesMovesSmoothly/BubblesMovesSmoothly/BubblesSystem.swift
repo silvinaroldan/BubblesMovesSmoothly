@@ -9,7 +9,6 @@ import RealityKit
 import RealityKitContent
 
 class BubblesSystem: System {
-    
     private let query = EntityQuery(where: .has(BubbleComponent.self))
     private let speed: Float = 0.01
     
@@ -18,8 +17,8 @@ class BubblesSystem: System {
     func update(context: SceneUpdateContext) {
         let entities = context.entities(matching: query, updatingSystemWhen: .rendering)
         
-        for bubble in entities  {
-            guard let bubbleComponent = bubble.components[BubbleComponent.self] else {return}
+        for bubble in entities {
+            guard let bubbleComponent = bubble.components[BubbleComponent.self] else { return }
             
             bubble.position += bubbleComponent.direction * speed * Float(context.deltaTime)
         }

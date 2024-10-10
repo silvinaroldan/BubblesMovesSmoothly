@@ -9,19 +9,16 @@ import SwiftUI
 
 @main
 struct BubblesMovesSmoothlyApp: App {
-    
     @State private var appModel = AppModel()
     
     init() {
-        //BubblesSystem.registerSystem()
+        // BubblesSystem.registerSystem()
     }
     
     var body: some Scene {
         WindowGroup {
-           
-                ContentView()
-                    .environment(appModel)
-            
+            ContentView()
+                .environment(appModel)
         }
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {

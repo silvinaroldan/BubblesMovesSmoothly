@@ -5,11 +5,10 @@
 //  Created by Silvina Roldan on 02/10/2024.
 //
 
-import SwiftUI
 import RealityKit
+import SwiftUI
 
 struct ContentView: View {
-
     var body: some View {
         VStack {
             ToggleImmersiveSpaceButton()

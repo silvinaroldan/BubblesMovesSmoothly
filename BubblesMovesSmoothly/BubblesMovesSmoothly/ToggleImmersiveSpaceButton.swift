@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ToggleImmersiveSpaceButton: View {
-
     @Environment(AppModel.self) private var appModel
 
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
@@ -38,6 +37,7 @@ struct ToggleImmersiveSpaceButton: View {
                                 // On error, we need to mark the immersive space
                                 // as closed because it failed to open.
                                 fallthrough
+
                             @unknown default:
                                 // On unknown response, assume space did not open.
                                 appModel.immersiveSpaceState = .closed
